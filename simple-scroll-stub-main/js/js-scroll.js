@@ -1,20 +1,21 @@
 const scrollElements = document.querySelectorAll(".js-scroll");
 scrollElements.forEach((el) => {
-  if (elementInView(el)) {
+  if (elementInView(el, .5)) {
     console.log("displayElements")
     displayScrollElement(el)
   }
 }
-
 )
+
+window.addEventListener('scroll', throttle(handleScrollAnimation, 100))
 // display functions, el means element 
 // checks whether element is in viewable area 
-function elementInView(el) {
+function elementInView(el, amountInView = 1) {
   const elementTop = el.getBoundingClientRect().top;
   const elementHeight = el.getBoundingClientRect().height;
   console.log(elementTop, elementHeight)
   return (
-    elementTop <= document.documentElement.clientHeight && elementTop > 0
+    elementTop +elementHeight*amountInView <= document.documentElement.clientHeight && elementTop + elementHeight * amountInView > 0
   )
 }
 // checks whether element is above or below viewable area 
@@ -34,6 +35,17 @@ function displayScrollElement(el) {
 // hide scroll element 
 function hideScrollElement(el) {
   el.classList.remove("scrolled");
+}
+
+function handleScrollAnimation() {
+  scrollElements.forEach((el) => {
+    if (elementInView(el, .5)) {
+      displayScrollElement(el)
+    } else if (elementOutOfView(el)) {
+      hideScrollElement(el)
+    }
+  }
+  )
 }
 
 //UTILITY
